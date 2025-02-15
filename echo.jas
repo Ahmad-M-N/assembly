@@ -1,0 +1,38 @@
+// 
+//   echo.jas
+//
+//   Author
+//     Dan Stone
+//
+//   Description
+//     Sample assembly program that reads a key press and echoes the result to 
+//     standard output.  
+//
+
+
+.main
+
+L1:   IN           // request character input from memory
+      DUP          // duplicate top of stack (inputed char) for comparing
+      BIPUSH 0x2E  // push 0x46 for comparison
+	ISUB
+	IFEQ L2
+      OUT          // else, print character
+      GOTO L1      // loop back to beginning of program
+
+
+L2:   OUT
+	BIPUSH 0X60
+	BIPUSH 0X65
+	BIPUSH 0X6E
+	BIPUSH 0X6F
+	BIPUSH 0X44
+	BIPUSH 0X0A
+	OUT
+	OUT
+	OUT
+	OUT
+	OUT
+	OUT
+	HALT
+.end-main

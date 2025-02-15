@@ -1,0 +1,68 @@
+//idiv.jas
+//By Sarah Dunn
+//
+
+.constant
+objref 0x40
+.end-constant
+
+.main
+	LDC_W objref
+	BIPUSH 27
+	BIPUSH 0x03
+	INVOKEVIRTUAL idiv
+	i2c
+	out
+	HALT
+.end-main
+
+.method idiv(a,b)
+.var
+q
+count
+.end-var
+	BIPUSH 0
+	DUP
+	ISTORE q
+	ISTORE count
+	ILOAD b
+	ISHL16
+	ISTORE b
+
+L2:	ILOAD a		//step 1
+	ILOAD b
+	ISUB
+	ISTORE a
+	ILOAD a
+	IFLT L1		//test remainder
+	ILOAD q		//2a
+	ISHL
+	BIPUSH 1
+	IADD
+	ISTORE q
+	GOTO L3
+
+L1:	ILOAD a		//2b
+	ILOAD b
+	IADD
+	ISTORE a
+	ILOAD q
+	ISHL
+	ISTORE q
+
+L3:	ILOAD b		//step 3
+	ISHR
+	ISTORE b
+
+	ILOAD count	//repetitions
+	BIPUSH 1
+	IADD
+	DUP
+	ISTORE count
+	BIPUSH 0x11
+	IF_ICMPEQ done
+	GOTO L2
+
+done:	ILOAD q
+	IRETURN
+.end-method

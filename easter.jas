@@ -1,0 +1,430 @@
+.constant
+	objref 0x40
+	range_start 1982
+	range_end 2048
+.end-constant
+
+.main
+.var
+	input_year
+	a
+	b
+	c
+	d
+	e
+	date_num
+.end-var
+	bipush 32
+	bipush 58
+	bipush 114  
+	bipush 97
+	bipush 101 
+	bipush 121 
+	bipush 32 
+	bipush 114 
+	bipush 101 
+	bipush 116 
+	bipush 110 
+	bipush 101 
+	bipush 32 
+	bipush 101 
+	bipush 115 
+	bipush 97 
+	bipush 101 
+	bipush 108 
+	bipush 80
+	out
+	out
+	out
+	out
+	out
+	out
+	out
+	out
+	out
+	out
+	out
+	out
+	out
+	out
+	out
+	out
+	out
+	out
+	out
+
+	LDC_w objref
+	invokevirtual getnum
+	istore input_year
+
+	bipush 0x0A
+	out
+	
+	iload input_year
+	LDC_w range_start
+	isub
+	iflt error_low
+	
+	LDC_w range_end
+	iload input_year
+	isub
+	iflt error_high
+
+	LDC_w objref
+	iload input_year
+	bipush 19
+	invokevirtual irem
+	istore a
+
+
+	LDC_w objref
+	iload input_year
+	bipush 4
+	invokevirtual irem
+	istore b
+
+
+	LDC_w objref
+	iload input_year
+	bipush 7
+	invokevirtual irem
+	istore c
+
+
+	LDC_w objref
+
+	LDC_w objref
+	iload a
+	bipush 19
+	invokevirtual imul
+	bipush 24
+	iadd
+
+	bipush 30
+	invokevirtual irem
+	istore d
+
+
+	LDC_w objref
+	
+	LDC_w objref
+	iload b
+	bipush 2
+	invokevirtual imul
+	
+	LDC_w objref
+	iload c
+	bipush 4
+	invokevirtual imul
+
+	LDC_w objref
+	iload d
+	bipush 6
+	invokevirtual imul
+	
+	bipush 5
+	iadd
+	iadd
+	iadd
+
+	bipush 7
+	invokevirtual irem
+	istore e
+	
+
+	iload d
+	iload e
+	bipush 22
+	iadd
+	iadd
+	istore date_num
+	
+
+	bipush 31
+	iload date_num
+	isub
+	iflt april
+	bipush 104 
+	bipush 99 
+	bipush 114 
+	bipush 97 
+	bipush 77
+end:	out
+	out
+	out
+	out
+	out
+	bipush 32
+	out
+	LDC_w objref
+	iload date_num
+	invokevirtual print
+	halt
+	
+april: iload date_num
+	 bipush 31
+	 isub
+	 istore date_num
+	 bipush 108 
+	 bipush 105 
+ 	 bipush 114 
+	 bipush 112 
+	 bipush 65
+	 goto end
+
+error_low:  bipush 32 
+		bipush 58 
+		bipush 114 
+		bipush 111 
+		bipush 114 
+		bipush 114 
+		bipush 69
+		out
+		out
+		out
+		out
+		out
+		out
+		out
+		LDC_W objref
+		iload input_year
+		invokevirtual print
+		bipush 32
+		out
+		bipush 60
+		out
+		bipush 32
+		out
+		LDC_W objref
+		LDC_w range_start
+		invokevirtual print
+		halt
+error_high: bipush 32 
+		bipush 58 
+		bipush 114 
+		bipush 111 
+		bipush 114 
+		bipush 114 
+		bipush 69
+		out
+		out
+		out
+		out
+		out
+		out
+		out
+		LDC_W objref
+		iload input_year
+		invokevirtual print
+		bipush 32
+		out
+		bipush 62
+		out
+		bipush 32
+		out
+		LDC_w objref
+		LDC_w range_end
+		invokevirtual print
+		halt
+	
+.end-main
+
+.method imul (a,b)
+.var
+	p
+.end-var
+	bipush 0
+	istore p
+im1:  iload b
+	dup
+	ifeq im2
+	bipush 1
+	iand
+	ifeq im3
+	iload p
+	iload a
+	iadd
+	istore p
+im3:	iload a
+	ishl
+	istore a
+	iload b
+	ishr
+	istore b
+	goto im1
+im2:  pop
+	iload p
+	ireturn
+.end-method
+
+.method idiv(dividend, devisor)
+.var
+rem
+quo
+count
+.end-var
+bipush 17
+istore count
+bipush 0
+istore quo
+iload dividend
+istore rem
+iload devisor
+ishl16
+istore devisor
+while: iload count
+ifeq done
+iload rem
+iload devisor
+isub
+istore rem
+iload rem
+iflt else
+iload quo
+ishl
+bipush 1
+iadd
+istore quo
+end: iload devisor
+ishr
+istore devisor
+iload count
+bipush 1
+isub
+istore count
+goto while
+else: iload rem
+iload devisor
+iadd
+istore rem
+iload quo
+ishl
+istore quo
+goto end
+done: iload quo
+	ireturn
+.end-method
+
+.method irem(dividend, devisor)
+.var
+rem
+quo
+count
+.end-var
+bipush 17
+istore count
+bipush 0
+istore quo
+iload dividend
+istore rem
+iload devisor
+ishl16
+istore devisor
+while: iload count
+ifeq done
+iload rem
+iload devisor
+isub
+istore rem
+iload rem
+iflt else
+iload quo
+ishl
+bipush 1
+iadd
+istore quo
+end: iload devisor
+ishr
+istore devisor
+iload count
+bipush 1
+isub
+istore count
+goto while
+else: iload rem
+iload devisor
+iadd
+istore rem
+iload quo
+ishl
+istore quo
+goto end
+done: iload rem
+	ireturn
+.end-method
+
+// Press enter when done.
+// Additionally, also shows what chars you are inputing
+.method getnum()
+.var
+	total
+	number
+.end-var
+	bipush 0
+	istore total
+cin:	in
+	dup           // duplicate top of stack (inputed char) for comparing
+      bipush 0x00   // push 0x00 for comparison
+      IF_ICMPEQ l2  // if no characters are available for input, loop
+	dup
+	bipush 0x0A
+	isub
+	ifeq DONE
+	dup
+	out
+	bipush 0x30
+	isub
+	istore number
+	LDC_w objref
+	iload total
+	bipush 10
+	invokevirtual imul
+	iload number
+	iadd
+	istore total
+	goto cin
+l2:	pop
+	goto cin
+DONE: pop
+	iload total
+	ireturn
+.end-method
+
+.method print(num)
+.var
+	count
+.end-var
+	 iload num
+	 ifeq prin0
+	 bipush 0
+	 istore count
+while: iload num
+	 ifeq print
+	 LDC_w objref
+	 iload num
+	 bipush 10
+	 invokevirtual irem
+	 LDC_w objref
+	 iload num
+	 bipush 10
+	 invokevirtual idiv
+	 istore num
+	 iload count
+	 bipush 1
+	 iadd
+	 istore count
+	 goto while
+print: iload count
+	 ifeq done
+	 i2c
+	 out
+	 iload count
+	 bipush 1
+	 isub
+	 istore count
+	 goto print
+prin0: bipush 0x30
+	 out
+	 goto done
+done:	 ireturn
+.end-method

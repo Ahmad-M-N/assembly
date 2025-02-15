@@ -1,0 +1,95 @@
+.constant
+	objref 0x40
+	dividend 0
+	divisor  10
+.end-constant
+
+.main
+	LDC_w objref
+	LDC_w dividend
+	LDC_w divisor
+	invokevirtual iremainder
+	i2c
+	out
+	halt
+.end-main
+
+.method imul(a,b)
+.var
+	sum
+	count
+.end-var
+	bipush 0
+	istore sum
+	bipush 0
+	istore count
+DO: 	iload sum
+	iload a
+	iadd
+	istore sum
+	iload count
+	bipush 1
+	iadd
+	dup
+	istore count
+	iload b
+	isub
+	ifeq DONE
+	GOTO DO
+DONE: iload sum
+	ireturn
+
+.end-method
+
+.method idevide(dividend,divisor)
+.var
+	quotient
+.end-var
+	bipush 0
+	istore quotient
+	iload dividend
+	iload divisor
+	isub
+	iflt DONE
+DO:	iload dividend
+	iload divisor
+	isub
+	istore dividend
+	iload quotient
+	bipush 1
+	iadd
+	istore quotient
+	iload dividend
+	iload divisor
+	isub
+	iflt DONE
+	goto DO
+DONE: iload quotient
+	ireturn
+.end-method
+
+.method iremainder(dividend,divisor)
+.var
+	quotient
+	remainder
+	product
+.end-var
+	LDC_w objref
+	iload dividend
+	iload divisor
+	invokevirtual idevide
+	istore quotient
+	LDC_w objref
+	iload quotient
+	iload divisor
+	invokevirtual imul
+	istore product
+	iload dividend
+	iload product
+	isub
+	istore remainder
+	iload remainder
+	ireturn
+.end-method
+	
+	

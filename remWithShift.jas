@@ -1,0 +1,47 @@
+.method irem(dividend, devisor)
+.var
+rem
+quo
+count
+.end-var
+bipush 17
+istore count
+bipush 0
+istore quo
+iload dividend
+istore rem
+iload devisor
+ishl16
+istore devisor
+while: iload count
+ifeq done
+iload rem
+iload devisor
+isub
+istore rem
+iload rem
+iflt else
+iload quo
+ishl
+bipush 1
+iadd
+istore quo
+end: iload devisor
+ishr
+istore devisor
+iload count
+bipush 1
+isub
+istore count
+goto while
+else: iload rem
+iload devisor
+iadd
+istore rem
+iload quo
+ishl
+istore quo
+goto end
+done: iload rem
+	ireturn
+.end-method

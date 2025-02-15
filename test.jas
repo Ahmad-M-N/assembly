@@ -1,0 +1,132 @@
+.constant
+objref 0x40
+.end-constant
+.main
+	IN
+	OUT
+	halt
+.end-main
+
+.method imul (a,b)
+.var
+	p
+.end-var
+	bipush 0
+	istore p
+im1:  iload b
+	dup
+	ifeq im2
+	bipush 1
+	iand
+	ifeq im3
+	iload p
+	iload a
+	iadd
+	istore p
+im3:	iload a
+	ishl
+	istore a
+	iload b
+	ishr
+	istore b
+	goto im1
+im2:  pop
+	iload p
+	ireturn
+.end-method
+
+.method idiv(dividend, devisor)
+.var
+rem
+quo
+count
+.end-var
+bipush 17
+istore count
+bipush 0
+istore quo
+iload dividend
+istore rem
+iload devisor
+ishl16
+istore devisor
+while: iload count
+ifeq done
+iload rem
+iload devisor
+isub
+istore rem
+iload rem
+iflt else
+iload quo
+ishl
+bipush 1
+iadd
+istore quo
+end: iload devisor
+ishr
+istore devisor
+iload count
+bipush 1
+isub
+istore count
+goto while
+else: iload rem
+iload devisor
+iadd
+istore rem
+iload quo
+ishl
+istore quo
+goto end
+done: iload quo
+	ireturn
+.end-method
+
+.method irem(dividend, devisor)
+.var
+rem
+quo
+count
+.end-var
+bipush 17
+istore count
+bipush 0
+istore quo
+iload dividend
+istore rem
+iload devisor
+ishl16
+istore devisor
+while: iload count
+ifeq done
+iload rem
+iload devisor
+isub
+istore rem
+iload rem
+iflt else
+iload quo
+ishl
+bipush 1
+iadd
+istore quo
+end: iload devisor
+ishr
+istore devisor
+iload count
+bipush 1
+isub
+istore count
+goto while
+else: iload rem
+iload devisor
+iadd
+istore rem
+iload quo
+ishl
+istore quo
+goto end
+done: iload rem
+	ireturn
+.end-method

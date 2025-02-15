@@ -1,0 +1,168 @@
+.constant
+	objref 0x40
+	number 0
+.end-constant
+
+.main
+	LDC_w objref
+	LDC_w number
+	invokevirtual display_num
+halt
+.end-main
+
+.method imul(a,b)
+.var
+	sum
+	count
+.end-var
+	bipush 0
+	istore sum
+	iload b
+	ifeq DONE
+	bipush 0
+	istore count
+DO: 	iload sum
+	iload a
+	iadd
+	istore sum
+	iload count
+	bipush 1
+	iadd
+	dup
+	istore count
+	iload b
+	isub
+	ifeq DONE
+	GOTO DO
+DONE: iload sum
+	ireturn
+
+.end-method
+
+.method idevide(dividend,divisor)
+.var
+	quotient
+.end-var
+	bipush 0
+	istore quotient
+	iload dividend
+	iload divisor
+	isub
+	iflt DONE
+DO:	iload dividend
+	iload divisor
+	isub
+	istore dividend
+	iload quotient
+	bipush 1
+	iadd
+	istore quotient
+	iload dividend
+	iload divisor
+	isub
+	iflt DONE
+	goto DO
+DONE: iload quotient
+	ireturn
+.end-method
+
+.method iremainder(dividend,divisor)
+.var
+	quotient
+	remainder
+	product
+.end-var
+	LDC_w objref
+	iload dividend
+	iload divisor
+	invokevirtual idevide
+	istore quotient
+	LDC_w objref
+	iload quotient
+	iload divisor
+	invokevirtual imul
+	istore product
+	iload dividend
+	iload product
+	isub
+	istore remainder
+	iload remainder
+	ireturn
+.end-method
+
+.method getnum()
+.var
+	total
+	number
+.end-var
+	bipush 0
+	istore total
+cin:	in
+	dup          // duplicate top of stack (inputed char) for comparing
+      bipush 0x00   // push 0x0 for comparison
+      IF_ICMPEQ l2 // if no characters are available for input, loop
+	dup
+	bipush 0x0A
+	isub
+	ifeq DONE
+	dup
+	out
+	bipush 0x30
+	isub
+	istore number
+	LDC_w objref
+	iload total
+	bipush 10
+	invokevirtual imul
+	iload number
+	iadd
+	istore total
+	goto cin
+l2:	pop
+	goto cin
+DONE: pop
+	iload total
+	ireturn
+.end-method
+
+.method display_num(num)
+.var
+	count
+.end-var
+	 iload num
+	 ifeq prin0
+	 bipush 0
+	 istore count
+while: iload num
+	 ifeq print
+	 LDC_w objref
+	 iload num
+	 bipush 10
+	 invokevirtual iremainder
+	 LDC_w objref
+	 iload num
+	 bipush 10
+	 invokevirtual idevide
+	 istore num
+	 iload count
+	 bipush 1
+	 iadd
+	 istore count
+	 goto while
+print: iload count
+	 ifeq done
+	 i2c
+	 out
+	 iload count
+	 bipush 1
+	 isub
+	 istore count
+	 goto print
+prin0: bipush 0x30
+	 out
+	 goto done
+done:	 ireturn
+.end-method
+
+	
+	

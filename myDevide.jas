@@ -1,0 +1,42 @@
+.constant
+	objref 0x40
+	dividend 0
+	divisor  10
+.end-constant
+
+.main
+	LDC_w objref
+	LDC_w dividend
+	LDC_w divisor
+	invokevirtual idevide
+	i2c
+	out
+	halt
+.end-main
+
+.method idevide(dividend,divisor)
+.var
+	quotient
+.end-var
+	bipush 0
+	istore quotient
+	iload dividend
+	iload divisor
+	isub
+	iflt DONE
+DO:	iload dividend
+	iload divisor
+	isub
+	istore dividend
+	iload quotient
+	bipush 1
+	iadd
+	istore quotient
+	iload dividend
+	iload divisor
+	isub
+	iflt DONE
+	goto DO
+DONE: iload quotient
+	ireturn
+.end-method

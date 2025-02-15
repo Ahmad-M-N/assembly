@@ -1,0 +1,27 @@
+.method imul (a,b)
+.var
+	p
+.end-var
+	bipush 0
+	istore p
+im1:  iload b
+	dup
+	ifeq im2
+	bipush 1
+	iand
+	ifeq im3
+	iload p
+	iload a
+	iadd
+	istore p
+im3:	iload a
+	ishl
+	istore a
+	istore b
+	ishr
+	istore b
+	goto im1
+im2:  pop
+	iload p
+	ireturn
+.end-method

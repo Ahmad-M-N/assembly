@@ -1,0 +1,8 @@
+.main
+	bipush 9
+	bipush 10
+	irem
+	i2c
+	out
+	halt
+.end-main

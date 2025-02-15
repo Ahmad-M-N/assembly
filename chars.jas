@@ -1,0 +1,25 @@
+// this program prints all the ASCII
+// characters
+
+.constant
+one	1
+start	32
+stop	126
+.end-constant
+
+.main
+	LDC_W start
+next:	DUP
+	OUT
+	DUP
+	LDC_W stop
+	ISUB
+	IFEQ done
+	LDC_W one
+	IADD
+	GOTO next
+done:	POP
+	HALT
+.end-main
+ 
+

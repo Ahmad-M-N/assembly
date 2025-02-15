@@ -1,0 +1,45 @@
+.constant
+objref 0x40
+a 3
+b 2
+.end-constant
+
+.main
+LDC_w objref
+LDC_w a
+LDC_w b
+invokevirtual imul
+bipush 0x30
+iadd
+out
+halt
+.end-main
+
+.method imul(a,b)
+.var
+	sum
+	count
+.end-var
+	bipush 0
+	istore sum
+	iload b
+	ifeq DONE
+	bipush 0
+	istore count
+DO: 	iload sum
+	iload a
+	iadd
+	istore sum
+	iload count
+	bipush 1
+	iadd
+	dup
+	istore count
+	iload b
+	isub
+	ifeq DONE
+	GOTO DO
+DONE: iload sum
+	ireturn
+
+.end-method

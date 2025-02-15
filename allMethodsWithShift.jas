@@ -1,0 +1,114 @@
+.constant
+objref 0x40
+.end-constant
+
+// Main contains a test run that does multiplication 
+// with user inputs and prints the results.
+.main
+.var
+	a
+	b
+	product
+.end-var
+	LDC_w objref
+	invokevirtual getnum
+	istore a
+	bipush 0x20
+	bipush 0x2A
+	bipush 0x20
+	out
+	out
+	out
+	LDC_w objref
+	invokevirtual getnum
+	istore b
+	bipush 0x20
+	bipush 0x3D
+	bipush 0x20
+	out
+	out
+	out
+	iload a
+	iload b
+	imul
+	istore product
+	LDC_w objref
+	iload product
+	invokevirtual print
+	halt
+.end-main
+
+
+
+// Press enter when done.
+// Additionally, also shows what chars you are inputing
+.method getnum()
+.var
+	total
+	number
+.end-var
+	bipush 0
+	istore total
+cin:	in
+	dup           // duplicate top of stack (inputed char) for comparing
+      bipush 0x00   // push 0x00 for comparison
+      IF_ICMPEQ l2  // if no characters are available for input, loop
+	dup
+	bipush 0x0A
+	isub
+	ifeq DONE
+	dup
+	out
+	bipush 0x30
+	isub
+	istore number
+	iload total
+	bipush 10
+	imul
+	iload number
+	iadd
+	istore total
+	goto cin
+l2:	pop
+	goto cin
+DONE: pop
+	iload total
+	ireturn
+.end-method
+
+.method print(num)
+.var
+	count
+.end-var
+	 iload num
+	 ifeq prin0
+	 bipush 0
+	 istore count
+while: iload num
+	 ifeq print
+	 iload num
+	 bipush 10
+	 irem
+	 iload num
+	 bipush 10
+	 idiv
+	 istore num
+	 iload count
+	 bipush 1
+	 iadd
+	 istore count
+	 goto while
+print: iload count
+	 ifeq done
+	 i2c
+	 out
+	 iload count
+	 bipush 1
+	 isub
+	 istore count
+	 goto print
+prin0: bipush 0x30
+	 out
+	 goto done
+done:	 ireturn
+.end-method

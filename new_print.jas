@@ -1,0 +1,70 @@
+.constant 
+	objref 0x40
+	thou 1000
+.end-constant
+
+.main
+	LDC_w objref
+	bipush 3
+	LDC_w thou
+	invokevirtual new_print
+.end-main
+
+.method print(num)
+.var
+	count
+.end-var
+	 iload num
+	 ifeq prin0
+	 bipush 0
+	 istore count
+while: iload num
+	 ifeq print
+	 iload num
+	 bipush 10
+	 irem
+	 iload num
+	 bipush 10
+	 idiv
+	 istore num
+	 iload count
+	 bipush 1
+	 iadd
+	 istore count
+	 goto while
+print: iload count
+	 ifeq done
+	 i2c
+	 out
+	 iload count
+	 bipush 1
+	 isub
+	 istore count
+	 goto print
+prin0: bipush 0x30
+	 out
+	 goto done
+done:	 ireturn
+.end-method
+
+.method new_print(i,c)
+	bipush 0x46
+	OUT
+	LDC_w objref
+	iload i
+	invokevirtual print
+	bipush 0x20
+	out
+	bipush 0x3D
+	out
+	bipush 0x20
+	out
+	LDC_w objref
+	iload c
+	invokevirtual print
+	bipush 0x0A
+	out
+	bipush 1
+	i2c
+	out
+.end-method
