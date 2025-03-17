@@ -1,0 +1,161 @@
+.constant 
+	objref 0x40
+.end-constant
+
+.main
+.var
+i
+n
+a
+b
+c
+j
+.end-var
+LDC_w objref
+invokevirtual getnum
+istore n
+bipush 0x0A
+out
+bipush 3
+istore i
+L001:
+	iload i
+	iload n
+	bipush 1
+	iadd
+	isub
+	iflt L002
+	goto L003
+L002:
+	bipush 1
+	istore a
+	bipush 1
+	istore b
+	bipush 1
+	istore c
+	bipush 2
+	istore j
+L004:
+	iload j
+	iload i
+	isub
+	iflt L005
+	goto L006
+L005:
+	iload a
+	iload b
+	iadd
+	istore c
+	iload b
+	istore a
+	iload c
+	istore b
+	iload j
+	bipush 1
+	iadd
+	istore j
+	goto L004
+L006:
+	LDC_w objref
+	iload i
+	iload c
+	invokevirtual new_print
+	iload i
+	bipush 1
+	iadd
+	istore i
+	goto L001
+L003:
+	HALT
+.end-main
+
+.method getnum()
+.var
+	total
+	number
+.end-var
+	bipush 0
+	istore total
+cin:	in
+	dup           // duplicate top of stack (inputed char) for comparing
+      bipush 0x00   // push 0x00 for comparison
+      IF_ICMPEQ l2  // if no characters are available for input, loop
+	dup
+	bipush 0x0A
+	isub
+	ifeq DONE
+	dup
+	out
+	bipush 0x30
+	isub
+	istore number
+	iload total
+	bipush 10
+	imul
+	iload number
+	iadd
+	istore total
+	goto cin
+l2:	pop
+	goto cin
+DONE: pop
+	iload total
+	ireturn
+.end-method
+
+.method print(num)
+.var
+	count
+.end-var
+	 iload num
+	 ifeq prin0
+	 bipush 0
+	 istore count
+while: iload num
+	 ifeq print
+	 iload num
+	 bipush 10
+	 irem
+	 iload num
+	 bipush 10
+	 idiv
+	 istore num
+	 iload count
+	 bipush 1
+	 iadd
+	 istore count
+	 goto while
+print: iload count
+	 ifeq done
+	 i2c
+	 out
+	 iload count
+	 bipush 1
+	 isub
+	 istore count
+	 goto print
+prin0: bipush 0x30
+	 out
+	 goto done
+done:	 ireturn
+.end-method
+
+.method new_print(i,c)
+	bipush 0x46
+	OUT
+	LDC_w objref
+	iload i
+	invokevirtual print
+	bipush 0x20
+	out
+	bipush 0x3D
+	out
+	bipush 0x20
+	out
+	LDC_w objref
+	iload c
+	invokevirtual print
+	bipush 0x0A
+	out
+	ireturn
+.end-method
