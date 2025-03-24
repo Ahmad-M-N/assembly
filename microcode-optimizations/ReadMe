@@ -1,4 +1,4 @@
-In here, you shoould find my assembly and microcode optimzations for fib computations.
+In here, you should find my assembly and microcode optimzations for fib computations.
 They are designed for the stack-based ijvm assembly - Mic 1 archtitecture.  
 I have gone to the microcode to create custom CPU insturctions.  
 These instructions are then going to be used in the assembly to make a fib function
